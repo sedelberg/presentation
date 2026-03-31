@@ -17,6 +17,7 @@ A lightweight, beautiful HTML-based alternative to PowerPoint that lets you crea
 ## 🚀 Quick Start (5 Minutes)
 
 ### 1. **Open the presentation**
+
 ```bash
 # Simply open in your browser
 open presentation.html
@@ -25,6 +26,7 @@ firefox presentation.html
 ```
 
 ### 2. **Navigate**
+
 - **Next slide**: `→` or `Space`
 - **Previous slide**: `←`
 - **First slide**: `Home`
@@ -33,11 +35,13 @@ firefox presentation.html
 - **Print/Export as PDF**: `Ctrl+P` (or Cmd+P on Mac)
 
 ### 3. **Edit slides** (see examples below)
+
 - Open `data.js` in your text editor
 - Modify or add slides (see "[Slide Types](#slide-types)" section)
 - Refresh `presentation.html` in browser to see changes
 
 ### 4. **Add images**
+
 - Place images in the `images/` directory
 - Reference them in `data.js` using relative paths like `"images/myimage.png"`
 
@@ -74,6 +78,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 ### **Title Slides**
 
 #### 1. **Cover** — Title slide with branding
+
 ```javascript
 {
     type: "cover",
@@ -83,11 +88,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     date: "March 31, 2026"
 }
 ```
+
 **Use for**: Opening slide, large visual impact
 
 ---
 
 #### 2. **Contact** — Contact/thank you slide
+
 ```javascript
 {
     type: "contact",
@@ -98,6 +105,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
     location: "New York, NY"
 }
 ```
+
 **Use for**: Closing slide, speaker information
 
 ---
@@ -105,6 +113,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 ### **Content Slides**
 
 #### 3. **Agenda** — List of topics
+
 ```javascript
 {
     type: "agenda",
@@ -117,11 +126,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     ]
 }
 ```
+
 **Use for**: Outlining presentation structure
 
 ---
 
 #### 4. **Text** — Simple text with bullets
+
 ```javascript
 {
     type: "text",
@@ -133,11 +144,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     ]
 }
 ```
+
 **Use for**: Bullet point content, quick facts
 
 ---
 
 #### 5. **Quote** — Inspirational or impactful quote
+
 ```javascript
 {
     type: "quote",
@@ -147,11 +160,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     author: "Walt Disney"
 }
 ```
+
 **Use for**: Section breaks, inspirational moments
 
 ---
 
 #### 6. **Section-break** — Minimal topic divider
+
 ```javascript
 {
     type: "section-break",
@@ -160,6 +175,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
     theme: "dark"
 }
 ```
+
 **Use for**: Separating major sections, visual breathing room
 
 ---
@@ -167,6 +183,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 ### **Data Visualization Slides**
 
 #### 7. **KPI** — Key Performance Indicators (4 metrics)
+
 ```javascript
 {
     type: "kpi",
@@ -179,11 +196,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     ]
 }
 ```
+
 **Use for**: Executive summaries, dashboard-style metrics
 
 ---
 
 #### 8. **Number-highlight** — Single large number with context
+
 ```javascript
 {
     type: "number-highlight",
@@ -192,11 +211,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     text: "Annual savings achieved through process automation and infrastructure optimization."
 }
 ```
+
 **Use for**: Highlighting a single impactful metric
 
 ---
 
 #### 9. **Chart-bar** — Bar chart (using Chart.js)
+
 ```javascript
 {
     type: "chart-bar",
@@ -210,6 +231,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
     }
 }
 ```
+
 **Use for**: Comparing values, trends, regional breakdowns
 
 ---
@@ -217,6 +239,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 ### **Layout Slides**
 
 #### 10. **Workflow** — Process flow with steps
+
 ```javascript
 {
     type: "workflow",
@@ -231,11 +254,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     ]
 }
 ```
+
 **Use for**: Process diagrams, workflows, multi-stage journeys
 
 ---
 
 #### 11. **Timeline** — Chronological events
+
 ```javascript
 {
     type: "timeline",
@@ -248,6 +273,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
     ]
 }
 ```
+
 **Use for**: Project timelines, product roadmaps, company milestones
 
 ---
@@ -255,6 +281,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 ### **Media Slides**
 
 #### 12. **Image-split** — Side-by-side text and image
+
 ```javascript
 {
     type: "image-split",
@@ -263,11 +290,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     image: "images/team.png"
 }
 ```
+
 **Use for**: Product features, team highlights, before/after
 
 ---
 
 #### 13. **Image-full** — Full-screen image with caption
+
 ```javascript
 {
     type: "image-full",
@@ -276,11 +305,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     caption: "Our flagship platform in action"
 }
 ```
+
 **Use for**: Product screenshots, architectural diagrams, visual content
 
 ---
 
 #### 14. **Image-background** — Image as background with text overlay
+
 ```javascript
 {
     type: "image-background",
@@ -290,11 +321,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     image: "images/office.png"
 }
 ```
+
 **Use for**: Inspirational slides, brand moments, dramatic visuals
 
 ---
 
 #### 15. **Video** — Embedded videos (YouTube, Vimeo, or MP4) ✨ NEW
+
 ```javascript
 {
     type: "video",
@@ -303,6 +336,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
     caption: "See our platform in action"
 }
 ```
+
 **Use for**: Product demonstrations, customer testimonials, explainer videos
 
 ---
@@ -310,6 +344,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 ### **Multi-Column Layouts** ✨ NEW
 
 #### 16. **Two-column** — Side-by-side columns
+
 ```javascript
 {
     type: "two-column",
@@ -320,11 +355,13 @@ This framework supports **17 different slide types**. Each slide is defined in `
     rightContent: "<h3>Automated Workflows</h3><p>Fast & efficient</p><p>Accurate & reliable</p><p>Scales effortlessly</p>"
 }
 ```
+
 **Use for**: Side-by-side comparisons, tutorials, pros/cons
 
 ---
 
 #### 17. **Grid** — Responsive card grid ✨ NEW
+
 ```javascript
 {
     type: "grid",
@@ -350,6 +387,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
     ]
 }
 ```
+
 **Use for**: Feature showcase, team members, product highlights
 
 ---
@@ -359,6 +397,7 @@ This framework supports **17 different slide types**. Each slide is defined in `
 Apply themes globally or per-slide:
 
 **Global theme** (in `data.js`):
+
 ```javascript
 const presentationData = {
     globalTheme: "light",  // or "dark"
@@ -367,6 +406,7 @@ const presentationData = {
 ```
 
 **Per-slide override**:
+
 ```javascript
 {
     type: "cover",
@@ -400,18 +440,21 @@ const presentationData = {
 ## 🖼️ Images
 
 ### Recommended Image Sizes
+
 - **Full-screen images**: 1920×1080 px (16:9)
 - **Logos**: 200×80 px or larger (at any aspect ratio)
 - **Split images**: 800×600 px
 - **Cards in grid**: 400×300 px
 
 ### Supported Formats
+
 - PNG (recommended for graphics)
 - JPG (best for photos)
 - WebP (modern, smaller file size)
 - GIF (animations supported)
 
 ### Adding Images
+
 1. Save images to the `images/` folder
 2. Reference in `data.js`: `"images/myimage.png"`
 3. Refresh browser
@@ -423,6 +466,7 @@ const presentationData = {
 Charts use [Chart.js](https://www.chartjs.org/). Currently supported:
 
 ### **Bar Charts** (`type: "chart-bar"`)
+
 ```javascript
 {
     type: "chart-bar",
@@ -438,6 +482,7 @@ Charts use [Chart.js](https://www.chartjs.org/). Currently supported:
 ```
 
 ### Supported Chart Types
+
 - ✅ Bar charts (vertical)
 - 🔄 (Coming soon) Pie/doughnut, line, area
 
@@ -446,12 +491,15 @@ Charts use [Chart.js](https://www.chartjs.org/). Currently supported:
 ## 🎯 Real-World Examples
 
 ### Sales Pitch Presentation
+
 See `examples/sales-pitch/` for a complete pre-built sales presentation structure.
 
 ### Training Module
+
 See `examples/training/` for an educational presentation with learning objectives, key concepts, and assessments.
 
 ### Quarterly Business Review
+
 See `examples/quarterly-review/` for KPI dashboards, timeline, and metrics.
 
 ---
@@ -463,6 +511,7 @@ For detailed customization options, see [CUSTOMIZATION.md](CUSTOMIZATION.md).
 ### Quick Customizations
 
 **Change brand colors** in `style.css`:
+
 ```css
 :root {
     --green: #01C38E;      /* Primary accent */
@@ -473,6 +522,7 @@ For detailed customization options, see [CUSTOMIZATION.md](CUSTOMIZATION.md).
 ```
 
 **Change fonts**:
+
 ```css
 :root {
     --font-main: 'Lexend', sans-serif;  /* Currently using Lexend */
@@ -480,6 +530,7 @@ For detailed customization options, see [CUSTOMIZATION.md](CUSTOMIZATION.md).
 ```
 
 **Modify slide padding/spacing**:
+
 ```css
 .slide {
     padding: 60px 80px;  /* Top/bottom and left/right */
@@ -491,10 +542,12 @@ For detailed customization options, see [CUSTOMIZATION.md](CUSTOMIZATION.md).
 ## 🚀 Publishing & Sharing
 
 ### Option 1: Local File
+
 - Open `presentation.html` directly in browser
 - Works offline
 
 ### Option 2: Simple Web Server
+
 ```bash
 # Python 3
 python -m http.server 8000
@@ -505,14 +558,17 @@ python -m SimpleHTTPServer 8000
 # Node.js (if installed)
 npx http-server
 ```
+
 Then open `http://localhost:8000/presentation.html`
 
 ### Option 3: GitHub Pages
+
 - Push to GitHub repo
 - Enable GitHub Pages in repo settings
 - Access at `https://yourusername.github.io/presentation/`
 
 ### Option 4: Cloud Storage
+
 - Upload to AWS S3, Google Drive, or OneDrive
 - Share link with viewers
 
@@ -521,26 +577,31 @@ Then open `http://localhost:8000/presentation.html`
 ## ❓ Troubleshooting
 
 **Images not showing?**
+
 - Verify image file exists in `images/` folder
 - Check file path in `data.js` (should be `"images/filename.png"`)
 - Check browser console (F12) for error messages
 
 **Chart not rendering?**
+
 - Ensure Chart.js library loaded (it auto-loads from CDN)
 - Check chart data format in `data.js`
 - Look for JavaScript errors in browser console
 
 **Keyboard controls not working?**
+
 - Click on the presentation to ensure it has focus
 - Refresh browser
 - Try different browser if issue persists
 
 **Presentation not updating after editing?**
+
 - Hard refresh browser: `Ctrl+F5` (Windows) or `Cmd+Shift+R` (Mac)
 - Clear browser cache if problem persists
 - Ensure you've saved `data.js`
 
 **Theme not applying?**
+
 - Check `theme` property spelling (must be exactly `"light"` or `"dark"`)
 - Verify global theme in `presentationData.globalTheme`
 - Hard refresh browser (Ctrl+F5)
@@ -570,6 +631,7 @@ This project is open source. Modify and share freely.
 ## 🤝 Contributing
 
 Have ideas for improvements? Found a bug?
+
 1. Create an issue describing the problem
 2. Submit a pull request with changes
 3. Include before/after screenshots if visual changes

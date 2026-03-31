@@ -70,6 +70,7 @@ Go back to your browser and **refresh** (F5 or Ctrl+R).
 You now have a working 3-slide presentation! 🎉
 
 **Navigate:**
+
 - Press `→` (right arrow) to go to next slide
 - Press `←` (left arrow) to go to previous slide
 - Press `Space` to advance
@@ -163,27 +164,32 @@ Save and refresh in browser. ✅
 ## 📋 All Available Slide Types
 
 **Title Slides:**
+
 - `cover` — Title slide with branding
 - `contact` — Thank you / contact information
 - `section-break` — Minimal section divider
 
 **Content:**
+
 - `text` — Bullets and text
 - `agenda` — List of topics
 - `quote` — Inspirational quote
 
 **Data:**
+
 - `kpi` — 4 metrics dashboard
 - `number-highlight` — Single large number
 - `chart-bar` — Bar chart
 
 **Layouts:**
+
 - `workflow` — Process flow diagram
 - `timeline` — Project timeline
 - `two-column` — Side-by-side content
 - `grid` — Card grid
 
 **Media:**
+
 - `image-split` — Text + image side-by-side
 - `image-full` — Full-screen image
 - `image-background` — Image with text overlay
@@ -207,6 +213,7 @@ To change colors, edit `style.css` at the very top:
 ```
 
 **Example colors:**
+
 - Bright green: `#00FF00`
 - Purple: `#9D4EDD`
 - Orange: `#FF8C42`
@@ -251,7 +258,7 @@ Find more colors at: [Coolors.co](https://coolors.co/)
 
 ---
 
-## 🎉 You're Ready!
+## 🎉 You're Ready
 
 You now have a working HTML presentation. Follow the documentation links above to learn more advanced features.
 

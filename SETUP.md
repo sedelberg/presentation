@@ -9,6 +9,7 @@ This guide covers installation, configuration, and deployment options for the HT
 This framework requires **no installation**. It's just HTML, CSS, and JavaScript.
 
 ### 1. Open the Presentation
+
 ```bash
 # On macOS or Linux, in terminal:
 open presentation.html
@@ -18,11 +19,13 @@ open presentation.html
 ```
 
 ### 2. Edit Your Content
+
 - Open `data.js` in your favorite text editor (VS Code, Sublime, Notepad++, etc.)
 - Modify slide content
 - Refresh browser (Ctrl+F5) to see changes
 
 ### 3. Add Images
+
 - Save images to the `images/` folder
 - Reference in `data.js` using `"images/filename.png"`
 
@@ -73,6 +76,7 @@ Edit `style.css` and find the `:root` section:
 ```
 
 **Example**: Change primary green to purple
+
 ```css
 --green: #9D4EDD;  /* Now all accents will be purple */
 ```
@@ -88,12 +92,15 @@ In `style.css`, modify `--font-main`:
 ```
 
 To use Google Fonts:
+
 1. Add import at top of `style.css`:
+
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap');
 ```
 
-2. Update `:root`:
+1. Update `:root`:
+
 ```css
 --font-main: 'Playfair Display', serif;
 ```
@@ -181,23 +188,28 @@ open presentation.html
 Use a simple HTTP server for better testing.
 
 #### Python 3 (recommended)
+
 ```bash
 cd /path/to/presentation
 python -m http.server 8000
 ```
+
 Then visit: `http://localhost:8000/presentation.html`
 
 #### Python 2
+
 ```bash
 python -m SimpleHTTPServer 8000
 ```
 
 #### Node.js
+
 ```bash
 npx http-server
 ```
 
 #### Ruby
+
 ```bash
 ruby -run -ehttpd . -p8000
 ```
@@ -212,11 +224,13 @@ ruby -run -ehttpd . -p8000
 Host your presentation on GitHub for free.
 
 #### Step 1: Create a GitHub repository
+
 1. Go to [github.com/new](https://github.com/new)
 2. Name it `presentation` (or anything)
 3. Click "Create repository"
 
 #### Step 2: Push your files
+
 ```bash
 cd /path/to/presentation
 git init
@@ -228,6 +242,7 @@ git push -u origin main
 ```
 
 #### Step 3: Enable GitHub Pages
+
 1. Go to repository settings
 2. Scroll to "Pages" section
 3. Set "Source" to "main" branch
@@ -243,18 +258,21 @@ Your presentation is now live at: `https://YOUR_USERNAME.github.io/presentation/
 ### Option 4: Cloud Storage
 
 #### Google Drive
+
 1. Upload all files to a folder
 2. Right-click `presentation.html`
 3. Select "Open with" → Choose "Google Drive"
 4. Share the link
 
 #### OneDrive
+
 1. Upload to OneDrive
 2. Right-click `presentation.html`
 3. Select "Share"
 4. Get shareable link
 
 #### AWS S3
+
 ```bash
 # Configure AWS CLI first
 aws s3 sync . s3://my-bucket/presentation/
@@ -275,11 +293,12 @@ aws s3 sync . s3://my-bucket/presentation/
 If hosting on GitHub Pages with a custom domain:
 
 1. Create `CNAME` file in repo:
+
 ```
 myslides.com
 ```
 
-2. Configure DNS to point to GitHub Pages (see GitHub docs)
+1. Configure DNS to point to GitHub Pages (see GitHub docs)
 
 ### Using a Build Tool (Optional)
 
@@ -333,6 +352,7 @@ No security concerns when running locally.
 ### Optimize for Presentations
 
 1. **Compress images**: Reduce to <200KB each
+
    ```bash
    # Using ImageMagick
    convert image.jpg -quality 80 -resize 1920x1080 optimized.jpg
@@ -346,7 +366,7 @@ No security concerns when running locally.
    - Browser will cache all assets
    - Ensures smooth animation during live presentation
 
-4. **Test on presentation device**: 
+4. **Test on presentation device**:
    - Test on actual projector/monitor before presenting
    - Check that text is readable from 10 feet away
 
@@ -362,6 +382,7 @@ du -sh images/
 ```
 
 Typical sizes:
+
 - `presentation.html`: 6-8 KB
 - `data.js`: 2-5 KB (depends on content)
 - `style.css`: 8-10 KB
@@ -372,22 +393,27 @@ Typical sizes:
 ## 🐛 Troubleshooting Setup
 
 ### Presentation.html won't open
+
 - **Solution**: Drag file directly into Chrome/Firefox window
 
 ### Images still not showing
+
 - **Check**: Does the file exist in `images/` folder?
 - **Check**: Is path correct in `data.js`? Must be `"images/filename.png"` (lowercase)
 - **Debug**: Open browser console (F12), look for 404 errors
 
 ### Changes not appearing after editing data.js
+
 - **Solution**: Hard refresh browser: `Ctrl+F5` (Windows) or `Cmd+Shift+R` (Mac)
 - **Alternative**: Clear browser cache completely
 
 ### Styles look wrong
+
 - **Solution**: Make sure `style.css` is in same folder as `presentation.html`
 - **Solution**: Hard refresh (Ctrl+F5)
 
 ### JavaScript errors in console
+
 - **Check**: Browser version is recent (Chrome/Firefox within last 6 months)
 - **Check**: No syntax errors in `data.js` (missing commas, quotes)
 
