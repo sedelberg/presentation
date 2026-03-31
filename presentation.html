@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data&Analytics Presentation</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div id="presentation-container">
+        </div>
+    
+    <div class="page-indicator" id="page-counter"></div>
+    
+    <div class="controls">
+        <button class="btn" onclick="prevSlide()">&#9664; Prev</button>
+        <button class="btn" onclick="nextSlide()">Next &#9654;</button>
+    </div>
+
+    <script src="data.js"></script>
+
+    <script>
+        const container = document.getElementById('presentation-container');
+        let currentSlideIdx = 0;
+        let chartInstances = [];
+
+        function buildPresentation() {
+            const globalTheme = presentationData.globalTheme || 'light';
+            
+            presentationData.slides.forEach((slide, index) => {
+                const themeClass = slide.theme ? `theme-${slide.theme}` : `theme-${globalTheme}`;
+                const slideDiv = document.createElement('div');
+                slideDiv.className = `slide ${themeClass} layout-${slide.type}`;
+                if(index === 0) slideDiv.classList.add('active');
+
+                let contentHtml = '';
+
+                // Header Generation (Logo on the far right)
+                if(slide.type !== 'cover' && slide.type !== 'image-background') {
+                    contentHtml += `
+                        <div class="slide-header">
+                            <div class="slide-title">${slide.title}</div>
+                            <img src="images/logo.png" class="brand-logo" alt="Data&Analytics Logo" onerror="this.style.display='none'">
+                        </div>
+                    `;
+                }
+
+                // Content Generation
+                switch(slide.type) {
+                    case 'cover':
+                        contentHtml += `
+                            <img src="images/logo.png" class="brand-logo" alt="Logo" onerror="this.style.display='none'" style="margin-bottom: 30px; height: 80px;">
+                            <h1 class="gradient-text">${slide.title}</h1>
+                            <h2>${slide.subtitle}</h2>
+                            <p style="margin-top:40px; font-size:1.2rem; opacity:0.8;">${slide.date || ''}</p>
+                        `;
+                        break;
+                    case 'agenda':
+                    case 'text':
+                        let listHtml = slide.items ? `<ul>${slide.items.map(i => `<li>${i}</li>`).join('')}</ul>` : slide.content;
+                        contentHtml += `<div class="content-body">${listHtml}</div>`;
+                        break;
+                    case 'kpi':
+                        contentHtml += `<div class="kpi-grid">`;
+                        slide.metrics.forEach(m => {
+                            let color = m.status === 'up' ? 'var(--green)' : 'var(--blue)';
+                            let arrow = m.status === 'up' ? '▲' : '▼';
+                            contentHtml += `
+                                <div class="kpi-card">
+                                    <div class="kpi-label">${m.label}</div>
+                                    <div class="kpi-value">${m.value}</div>
+                                    <div class="kpi-detail"><span style="color:${color}">${arrow}</span> ${m.detail}</div>
+                                </div>
+                            `;
+                        });
+                        contentHtml += `</div>`;
+                        break;
+                    case 'workflow':
+                        contentHtml += `<p class="content-body">${slide.description}</p><div class="workflow-container">`;
+                        slide.steps.forEach(s => {
+                            contentHtml += `<div class="workflow-step"><h4>${s.name}</h4><p>${s.detail}</p></div>`;
+                        });
+                        contentHtml += `</div>`;
+                        break;
+                    case 'timeline':
+                        contentHtml += `<div class="timeline">`;
+                        slide.events.forEach(e => {
+                            contentHtml += `<div class="timeline-item"><div class="timeline-date">${e.date}</div><p>${e.text}</p></div>`;
+                        });
+                        contentHtml += `</div>`;
+                        break;
+                    case 'image-split':
+                        contentHtml += `
+                            <div class="split-layout">
+                                <div class="split-text content-body">${slide.content}</div>
+                                <div class="split-image" style="background-image: url('${slide.image}')"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'image-full':
+                        contentHtml += `
+                            <div class="full-image-container">
+                                <img src="${slide.image}" class="full-image" alt="Slide Image">
+                                ${slide.caption ? `<div class="image-caption">${slide.caption}</div>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'image-background':
+                        slideDiv.style.backgroundImage = `url('${slide.image}')`;
+                        slideDiv.style.backgroundSize = 'cover';
+                        slideDiv.style.backgroundPosition = 'center';
+                        slideDiv.style.animation = 'none'; 
+                        contentHtml = `
+                            <h2>${slide.title}</h2>
+                            <p>${slide.content}</p>
+                        `;
+                        break;
+                    case 'number-highlight':
+                        contentHtml += `
+                            <div class="big-number">${slide.number}</div>
+                            <div class="big-number-text">${slide.text}</div>
+                        `;
+                        break;
+                    case 'quote':
+                        contentHtml += `
+                            <div class="quote-text">${slide.quote}</div>
+                            <div class="quote-author">— ${slide.author}</div>
+                        `;
+                        break;
+                    case 'chart-bar':
+                        contentHtml += `
+                            <p class="content-body">${slide.description}</p>
+                            <div class="chart-container"><canvas id="chart-${index}"></canvas></div>
+                        `;
+                        break;
+                    case 'contact':
+                        contentHtml += `
+                            <div class="contact-box">
+                                <h2>${slide.title}</h2>
+                                <p>📧 ${slide.email}</p>
+                                <p>📞 ${slide.phone}</p>
+                                <p>📍 ${slide.location}</p>
+                            </div>
+                        `;
+                        break;
+                }
+
+                slideDiv.innerHTML = contentHtml;
+                container.appendChild(slideDiv);
+
+                if(slide.type.startsWith('chart')) {
+                    setTimeout(() => initChart(`chart-${index}`, slide), 100);
+                }
+            });
+            updateCounter();
+        }
+
+        function initChart(canvasId, slideData) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const colors = ['#01C38E', '#0090D6', '#0F4C5C'];
+            slideData.chartData.datasets.forEach((ds, i) => {
+                ds.backgroundColor = colors[i % colors.length];
+                ds.borderRadius = 4;
+            });
+
+            const chart = new Chart(ctx, {
+                type: slideData.type.split('-')[1], 
+                data: slideData.chartData,
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#888' } } },
+                    scales: { 
+                        x: { ticks: { color: '#888' } }, 
+                        y: { ticks: { color: '#888' } } 
+                    }
+                }
+            });
+            chartInstances.push(chart);
+        }
+
+        function updateCounter() {
+            document.getElementById('page-counter').innerText = `${currentSlideIdx + 1} / ${presentationData.slides.length}`;
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((s, i) => {
+                if(i === currentSlideIdx) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+        }
+
+        function nextSlide() {
+            currentSlideIdx = (currentSlideIdx + 1) % presentationData.slides.length;
+            updateCounter();
+        }
+
+        function prevSlide() {
+            currentSlideIdx = (currentSlideIdx - 1 + presentationData.slides.length) % presentationData.slides.length;
+            updateCounter();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        window.onload = buildPresentation;
+    </script>
+</body>
+</html>
