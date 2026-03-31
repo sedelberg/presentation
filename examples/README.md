@@ -6,7 +6,7 @@ This directory contains three pre-built presentation templates designed as start
 
 ## 📋 Quick Start with Examples
 
-Each example folder contains a `data.js` file with a complete presentation. 
+Each example folder contains a `data.js` file with a complete presentation.
 
 **To use an example:**
 
@@ -16,6 +16,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 4. Edit the content to fit your needs
 
 **Or** run the example directly from its folder:
+
 1. Copy `presentation.html` and `style.css` into the example folder
 2. Open the example's `presentation.html` in your browser
 
@@ -24,9 +25,11 @@ Each example folder contains a `data.js` file with a complete presentation.
 ## 🎯 Available Templates
 
 ### 1. **Sales Pitch** (`sales-pitch/`)
+
 **Best for**: Selling a product or service to prospects
 
 **Includes**:
+
 - Problem statement & market opportunity
 - Solution overview & key differentiators
 - Customer success metrics & ROI calculations
@@ -37,19 +40,22 @@ Each example folder contains a `data.js` file with a complete presentation.
 - 20 slides total
 
 **Key Features**:
+
 - KPI cards showing customer success
 - Charts demonstrating ROI
 - Comparison matrices (us vs. competitors)
 - Implementation workflow
 - Before/after split layouts
 
-**When to Use**: 
+**When to Use**:
+
 - Prospective customer meetings
 - Investor pitches
 - Sales team presentations
 - Product demos
 
 **Customize**:
+
 - Replace company name and contact info
 - Update financial figures and customer names
 - Change industry/use case examples
@@ -58,9 +64,11 @@ Each example folder contains a `data.js` file with a complete presentation.
 ---
 
 ### 2. **Training Module** (`training/`)
+
 **Best for**: Educational content and team training
 
 **Includes**:
+
 - Learning objectives upfront
 - Structured course modules (5 modules)
 - Real-world case studies
@@ -70,6 +78,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 - 25 slides total
 
 **Key Features**:
+
 - Clear learning objectives
 - Module breaks for pacing
 - Comparison matrices (good vs. bad approaches)
@@ -78,6 +87,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 - Timeline for learning journey
 
 **When to Use**:
+
 - Employee onboarding
 - Skills workshops
 - Team training sessions
@@ -85,6 +95,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 - Internal knowledge sharing
 
 **Customize**:
+
 - Replace training topics with your content
 - Update case studies with your company examples
 - Adjust learning timeline (1-4 weeks)
@@ -93,9 +104,11 @@ Each example folder contains a `data.js` file with a complete presentation.
 ---
 
 ### 3. **Quarterly Business Review** (`quarterly-review/`)
+
 **Best for**: Executive reporting and stakeholder updates
 
 **Includes**:
+
 - Performance scorecard with KPIs
 - Revenue analysis by segment
 - Customer metrics & retention
@@ -107,6 +120,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 - 28 slides total
 
 **Key Features**:
+
 - Multiple KPI cards tracking different metrics
 - Revenue trend charts
 - Customer segment comparisons
@@ -116,6 +130,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 - Executive quotes and messaging
 
 **When to Use**:
+
 - Board meetings
 - Investor updates
 - Company all-hands meetings
@@ -123,6 +138,7 @@ Each example folder contains a `data.js` file with a complete presentation.
 - Stakeholder reports
 
 **Customize**:
+
 - Update all financial figures
 - Replace company metrics with actual numbers
 - Adjust roadmap for your Q2/Q3/Q4
@@ -134,9 +150,11 @@ Each example folder contains a `data.js` file with a complete presentation.
 ## 🔧 How to Customize Templates
 
 ### Step 1: Choose Your Template
+
 Identify which template best matches your needs.
 
 ### Step 2: Copy the Data
+
 ```bash
 # Example: Copy sales pitch to your main directory
 cp examples/sales-pitch/data.js data.js
@@ -145,7 +163,9 @@ cp examples/sales-pitch/data.js data.js
 Or manually copy the content from `examples/[template]/data.js` to your `data.js`
 
 ### Step 3: Edit Content
+
 Open `data.js` in your text editor and replace placeholder text:
+
 - Titles and subtitles
 - Company/product names
 - Metrics and numbers
@@ -153,13 +173,16 @@ Open `data.js` in your text editor and replace placeholder text:
 - Testimonials and quotes
 
 ### Step 4: Add Your Images
+
 1. Place your images in the `images/` folder
 2. Update image paths in `data.js`:
+
    ```javascript
    image: "images/your-image.png"
    ```
 
 ### Step 5: Test
+
 1. Save `data.js`
 2. Refresh `presentation.html` in browser
 3. Test keyboard navigation (arrows, space, F for fullscreen)
@@ -172,17 +195,20 @@ Open `data.js` in your text editor and replace placeholder text:
 Each template uses realistic but placeholder metrics. Common ones to customize:
 
 **Revenue Figures**:
+
 - `$42.3M` - Total revenue
 - `$1.2M` - Monthly amount
 - `28%` - Growth percentage
 
 **Customer Metrics**:
+
 - `4,250` - Total customers
 - `2.1%` - Churn rate
 - `97.9%` - Retention rate
 - `95%` - NPS or satisfaction score
 
 **Team Metrics**:
+
 - `187` - Total employees
 - `+24 YoY` - Headcount growth
 - `1.2%` - Attrition rate
@@ -229,19 +255,25 @@ See [README.md](/../README.md) for complete slide type reference.
 ## ❓ Common Customizations
 
 ### Change All Dates
+
 Search `data.js` for "2026" and replace with current year/dates.
 
 ### Update All Company Names
+
 Search for placeholder names and replace throughout.
 
 ### Adjust Financial Figures
+
 Scale metrics to match your business size:
+
 - Startup: Divide all numbers by 10
 - Enterprise: Multiply by appropriate factor
 - Non-profit: Replace revenue with donations/impact metrics
 
 ### Add/Remove Slides
+
 Edit the `slides` array in `data.js`:
+
 - **Add**: Copy a slide object and fill in content
 - **Remove**: Delete a slide object
 - **Reorder**: Move slide objects up/down in array

@@ -340,7 +340,7 @@ const presentationData = {
                 { label: "Companies Served", value: "2,847", status: "up", detail: "+450 new this quarter" },
                 { label: "Uptime Achieved", value: "99.97%", status: "up", detail: "Above guarantee" },
                 { label: "Avg Implementation", value: "8 days", status: "down", detail: "Industry avg: 30" },
-                { label: "Customer Satisfaction", value: "96%", status: "up", detail "+8% YoY" }
+                { label: "Customer Satisfaction", value: "96%", status: "up", detail: "+8% YoY" }
             ]
         },
 

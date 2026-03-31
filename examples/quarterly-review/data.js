@@ -91,7 +91,7 @@ const presentationData = {
             title: "Customer Health Dashboard",
             metrics: [
                 { label: "Total Customers", value: "4,250", status: "up", detail: "+950 added" },
-                { label: "Retention Rate", value: "97.9%", status: "up", detail "vs 96.8% last quarter" },
+                { label: "Retention Rate", value: "97.9%", status: "up", detail: "vs 96.8% last quarter" },
                 { label: "NPS Score", value: "68", status: "up", detail: "+8 from Q4" },
                 { label: "Avg Contract Value", value: "$9,950", status: "up", detail: "+12%" }
             ]

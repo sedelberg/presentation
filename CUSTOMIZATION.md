@@ -54,6 +54,7 @@ In `style.css`, add styles for your layout:
 ### Example: Custom Review Slide
 
 **data.js:**
+
 ```javascript
 {
     type: "review",
@@ -67,6 +68,7 @@ In `style.css`, add styles for your layout:
 ```
 
 **presentation.html:**
+
 ```javascript
 case 'review':
     contentHtml += `<div class="review-grid">`;
@@ -83,6 +85,7 @@ case 'review':
 ```
 
 **style.css:**
+
 ```css
 .layout-review {
     justify-content: center;
@@ -121,6 +124,7 @@ case 'review':
 Create a complete color theme by modifying `:root` in `style.css`.
 
 #### Modern Dark Blue Theme
+
 ```css
 :root {
     --green: #00D9FF;       /* Cyan accent */
@@ -133,6 +137,7 @@ Create a complete color theme by modifying `:root` in `style.css`.
 ```
 
 #### Warm Orange Theme
+
 ```css
 :root {
     --green: #FF6B35;       /* Bright orange */
@@ -145,6 +150,7 @@ Create a complete color theme by modifying `:root` in `style.css`.
 ```
 
 #### Professional Grayscale
+
 ```css
 :root {
     --green: #4A90E2;       /* Professional blue */
@@ -159,6 +165,7 @@ Create a complete color theme by modifying `:root` in `style.css`.
 ### Generate Custom Colors
 
 Use tools like:
+
 - [Coolors.co](https://coolors.co/) — Color palette generator
 - [Adobe Color](https://color.adobe.com/) — Professional color exploration
 - [Accessible Colors](https://accessible-colors.com/) — WCAG AA compliant
@@ -168,6 +175,7 @@ Use tools like:
 ## ✏️ Font Customization
 
 ### Web-Safe Fonts (No extra loading)
+
 ```css
 --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 --font-main: 'Georgia', serif;
@@ -218,6 +226,7 @@ Modify heading sizes in `style.css`:
 ```
 
 **Common font weights:**
+
 - `300`: Light (elegant, thin)
 - `400`: Normal (default)
 - `500`: Medium (slightly heavier)
@@ -502,13 +511,14 @@ Chart.js is already loaded. Add more chart types:
 
 ### Add Highlight.js for Code Highlighting
 
-1. Add to `presentation.html`:
+1.Add to `presentation.html`:
+
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/atom-one-dark.min.css">
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/highlight.min.js"></script>
 ```
 
-2. Use `<pre><code>` blocks in slides
+2.Use `<pre><code>` blocks in slides
 
 ---
 
@@ -517,6 +527,7 @@ Chart.js is already loaded. Add more chart types:
 Create reusable theme files:
 
 **themes/vibrant.css:**
+
 ```css
 :root {
     --green: #FF006E;
@@ -529,6 +540,7 @@ Create reusable theme files:
 ```
 
 **themes/minimal.css:**
+
 ```css
 :root {
     --green: #000000;
@@ -541,6 +553,7 @@ Create reusable theme files:
 ```
 
 Link in `presentation.html`:
+
 ```html
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="themes/vibrant.css">  <!-- Override defaults -->
