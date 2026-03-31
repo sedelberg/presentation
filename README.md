@@ -37,7 +37,6 @@ firefox presentation.html
 ### 3. **Edit slides** (see examples below)
 
 - Open `data.js` in your text editor
-- Modify or add slides (see "[Slide Types](#slide-types)" section)
 - Refresh `presentation.html` in browser to see changes
 
 ### 4. **Add images**
@@ -49,7 +48,7 @@ firefox presentation.html
 
 ## 📁 File Structure
 
-```
+```text
 presentation/
 ├── presentation.html      # Main presentation viewer (no edits needed)
 ├── data.js               # Your slide content (EDIT THIS)
@@ -418,7 +417,7 @@ const presentationData = {
 ### Available Themes
 
 | Theme | Background | Text | Use Case |
-|-------|-----------|------|----------|
+| ------- | ----------- | ------ | ---------- |
 | **light** | White | Navy | Default, high contrast, readable |
 | **dark** | Navy | White | Dark rooms, projectors, dramatic |
 
@@ -427,7 +426,7 @@ const presentationData = {
 ## ⌨️ Keyboard Controls
 
 | Key | Action |
-|-----|--------|
+| ----- | -------- |
 | `→` or `Space` | Next slide |
 | `←` | Previous slide |
 | `Home` | First slide |
@@ -648,4 +647,4 @@ Have ideas for improvements? Found a bug?
 
 ---
 
-**Happy presenting! 🎉**
+### Happy presenting! 🎉**

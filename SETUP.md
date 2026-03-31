@@ -51,7 +51,7 @@ const presentationData = {
 ### Available Global Options
 
 | Option | Values | Default | Description |
-|--------|--------|---------|-------------|
+| -------- | -------- | --------- | ------------- |
 | `globalTheme` | `"light"`, `"dark"` | `"light"` | Default theme for all slides |
 
 ---
@@ -135,7 +135,7 @@ Find `.slide-header` in `style.css`:
 
 ### Directory Structure
 
-```
+```text
 presentation/
 └── images/
     ├── logo.png       (Brand logo)
@@ -294,7 +294,7 @@ If hosting on GitHub Pages with a custom domain:
 
 1. Create `CNAME` file in repo:
 
-```
+```text
 myslides.com
 ```
 
@@ -331,7 +331,7 @@ No security concerns when running locally.
 ## 🌐 Browser Compatibility
 
 | Browser | Support | Notes |
-|---------|---------|-------|
+| --------- | --------- | ------- |
 | Chrome/Chromium | ✅ Full | Latest versions (90+) |
 | Firefox | ✅ Full | Latest versions (88+) |
 | Safari | ✅ Full | Latest versions (14+) |
