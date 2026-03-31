@@ -19,6 +19,7 @@
     <div class="page-indicator" id="page-counter"></div>
     
     <div class="controls">
+        <button class="btn" onclick="toggleFullscreen()" title="Fullscreen (F)">⛶</button>
         <button class="btn" onclick="prevSlide()">&#9664; Prev</button>
         <button class="btn" onclick="nextSlide()">Next &#9654;</button>
     </div>
@@ -149,6 +150,70 @@
                             </div>
                         `;
                         break;
+                    case 'section-break':
+                        contentHtml += `
+                            <div class="section-break-content">
+                                <h1 class="section-title">${slide.title}</h1>
+                                ${slide.subtitle ? `<h2 class="section-subtitle">${slide.subtitle}</h2>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'two-column':
+                        contentHtml += `
+                            <div class="two-column-layout">
+                                <div class="column">
+                                    ${slide.leftLabel ? `<h3 class="column-label">${slide.leftLabel}</h3>` : ''}
+                                    <div class="column-content">${slide.leftContent}</div>
+                                </div>
+                                <div class="column">
+                                    ${slide.rightLabel ? `<h3 class="column-label">${slide.rightLabel}</h3>` : ''}
+                                    <div class="column-content">${slide.rightContent}</div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'comparison':
+                        contentHtml += `<div class="comparison-grid">`;
+                        contentHtml += `<div class="comparison-column"><h3>${slide.leftLabel}</h3>`;
+                        slide.leftItems.forEach(item => {
+                            contentHtml += `<div class="comparison-item"><span class="item-icon">✗</span><p>${item}</p></div>`;
+                        });
+                        contentHtml += `</div>`;
+                        contentHtml += `<div class="comparison-column"><h3>${slide.rightLabel}</h3>`;
+                        slide.rightItems.forEach(item => {
+                            contentHtml += `<div class="comparison-item"><span class="item-icon">✓</span><p>${item}</p></div>`;
+                        });
+                        contentHtml += `</div></div>`;
+                        break;
+                    case 'grid':
+                        contentHtml += `
+                            <div class="grid-container" style="--grid-columns: ${slide.columns || 3}">
+                                ${slide.items.map(item => `
+                                    <div class="grid-card">
+                                        ${item.icon ? `<div class="grid-icon">${item.icon}</div>` : ''}
+                                        ${item.image ? `<div class="grid-image" style="background-image: url('${item.image}')"></div>` : ''}
+                                        <h4>${item.title}</h4>
+                                        <p>${item.description}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        break;
+                    case 'video':
+                        contentHtml += `
+                            <div class="video-container">
+                                <div class="video-wrapper">
+                                    ${slide.videoUrl.includes('youtube.com') || slide.videoUrl.includes('youtu.be') ?
+                                        `<iframe src="${slide.videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` :
+                                        slide.videoUrl.includes('vimeo.com') ?
+                                        `<iframe src="${slide.videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>` :
+                                        `<video controls style="width: 100%; height: 100%;"><source src="${slide.videoUrl}" type="video/mp4">Your browser does not support the video tag.</video>`
+                                    }
+                                </div>
+                                ${slide.caption ? `<div class="video-caption">${slide.caption}</div>` : ''}
+                            </div>
+                        `;
+                        break;
                 }
 
                 slideDiv.innerHTML = contentHtml;
@@ -203,9 +268,55 @@
             updateCounter();
         }
 
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => {
+                    console.log(`Unable to enter fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
+            // Navigation
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+            
+            // Jump to first/last slide
+            if (e.key === 'Home') {
+                e.preventDefault();
+                currentSlideIdx = 0;
+                updateCounter();
+            }
+            if (e.key === 'End') {
+                e.preventDefault();
+                currentSlideIdx = presentationData.slides.length - 1;
+                updateCounter();
+            }
+            
+            // Fullscreen toggle
+            if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+            
+            // Jump to specific slide (1-9 keys)
+            if (e.key >= '1' && e.key <= '9') {
+                const slideNum = parseInt(e.key) - 1;
+                if (slideNum < presentationData.slides.length) {
+                    e.preventDefault();
+                    currentSlideIdx = slideNum;
+                    updateCounter();
+                }
+            }
         });
 
         window.onload = buildPresentation;
