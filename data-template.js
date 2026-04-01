@@ -92,6 +92,8 @@ const presentationData = {
                 { label: "Revenue", value: "$42.3M", status: "up", detail: "+28% YoY" },
                 { label: "Market Share", value: "18.5%", status: "up", detail: "+3.2 pts" },
                 { label: "Customer Churn", value: "2.1%", status: "down", detail: "Target: 2%" },
+                { label: "Net Promoter Score", value: "68", status: "up", detail: "+12 from prev" },
+                { label: "Net Promoter Score", value: "68", status: "up", detail: "+12 from prev" },
                 { label: "Net Promoter Score", value: "68", status: "up", detail: "+12 from prev" }
             ]
         },

@@ -7,11 +7,17 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="iff_style.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
 <body>
+
+    <!-- Sleek Progress Bar -->
+    <div class="progress-track">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
 
     <div id="presentation-container">
         </div>
@@ -42,12 +48,13 @@
 
                 let contentHtml = '';
 
-                // Header Generation (Logo on the far right)
-                if(slide.type !== 'cover' && slide.type !== 'image-background') {
+                // Default Header Generation (Logo on the far right)
+                // We exclude center-aligned or full-screen layouts from the standard header
+                if(slide.type !== 'cover' && slide.type !== 'image-background' && slide.type !== 'section-break' && slide.type !== 'contact') {
                     contentHtml += `
                         <div class="slide-header">
                             <div class="slide-title">${slide.title}</div>
-                            <img src="images/logo.png" class="brand-logo" alt="Data&Analytics Logo" onerror="this.style.display='none'">
+                            <img src="images/Logo.svg" class="brand-logo" alt="Brand Logo" onerror="this.style.display='none'">
                         </div>
                     `;
                 }
@@ -56,7 +63,7 @@
                 switch(slide.type) {
                     case 'cover':
                         contentHtml += `
-                            <img src="images/logo.png" class="brand-logo" alt="Logo" onerror="this.style.display='none'" style="margin-bottom: 30px; height: 80px;">
+                            <img src="images/Logo.png" class="brand-logo" alt="Brand Logo" onerror="this.style.display='none'" style="margin-bottom: 30px; height: 80px;">
                             <h1 class="gradient-text">${slide.title}</h1>
                             <h2>${slide.subtitle}</h2>
                             <p style="margin-top:40px; font-size:1.2rem; opacity:0.8;">${slide.date || ''}</p>
@@ -118,6 +125,7 @@
                         slideDiv.style.backgroundPosition = 'center';
                         slideDiv.style.animation = 'none'; 
                         contentHtml = `
+                            <img src="images/Logo.png" class="brand-logo" alt="Brand Logo" style="position: absolute; top: 60px; right: 80px; z-index: 10;" onerror="this.style.display='none'">
                             <h2>${slide.title}</h2>
                             <p>${slide.content}</p>
                         `;
@@ -143,6 +151,7 @@
                     case 'contact':
                         contentHtml += `
                             <div class="contact-box">
+                                <img src="images/Logo.png" class="brand-logo" style="margin-bottom: 30px; height: 70px;" alt="Brand Logo" onerror="this.style.display='none'">
                                 <h2>${slide.title}</h2>
                                 <p>📧 ${slide.email}</p>
                                 <p>📞 ${slide.phone}</p>
@@ -153,6 +162,7 @@
                     case 'section-break':
                         contentHtml += `
                             <div class="section-break-content">
+                                <img src="images/Logo.png" class="brand-logo" style="margin-bottom: 40px; height: 65px;" alt="Brand Logo" onerror="this.style.display='none'">
                                 <h1 class="section-title">${slide.title}</h1>
                                 ${slide.subtitle ? `<h2 class="section-subtitle">${slide.subtitle}</h2>` : ''}
                             </div>
@@ -229,20 +239,76 @@
         function initChart(canvasId, slideData) {
             const ctx = document.getElementById(canvasId).getContext('2d');
             const colors = ['#01C38E', '#0090D6', '#0F4C5C'];
+            
+            // Store original colors for resetting
+            const originalColors = [];
+
             slideData.chartData.datasets.forEach((ds, i) => {
-                ds.backgroundColor = colors[i % colors.length];
+                const color = colors[i % colors.length];
+                ds.backgroundColor = color;
                 ds.borderRadius = 4;
+                originalColors.push(color);
             });
 
             const chart = new Chart(ctx, {
                 type: slideData.type.split('-')[1], 
                 data: slideData.chartData,
+                plugins: [ChartDataLabels],
                 options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#888' } } },
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { color: '#888' } },
+                        datalabels: {
+                            color: 'white',
+                            anchor: 'end',
+                            align: 'top',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value) => {
+                                return Math.round(value);
+                            }
+                        }
+                    },
                     scales: { 
                         x: { ticks: { color: '#888' } }, 
-                        y: { ticks: { color: '#888' } } 
+                        y: { ticks: { color: '#888' }, beginAtZero: true } 
+                    },
+                    onHover: (event, chartElement) => {
+                        const canvas = chart.canvas;
+                        canvas.style.cursor = chartElement.length > 0 ? 'pointer' : 'default';
+                    },
+                    onClick: (evt, elements) => {
+                        const datalabels = chart.options.plugins.datalabels;
+
+                        // If the user clicks a bar
+                        if (elements.length > 0) {
+                            const activeElement = elements[0];
+                            const { datasetIndex, index } = activeElement;
+
+                            // Fade all bars except the active one
+                            chart.data.datasets.forEach((dataset, i) => {
+                                dataset.backgroundColor = dataset.data.map((value, j) => {
+                                    const originalColor = Array.isArray(originalColors[i]) ? originalColors[i][j] : originalColors[i];
+                                    return (i === datasetIndex && j === index) ? originalColor : '#E0E0E0';
+                                });
+                            });
+                            
+                            // Fade all data labels except the active one
+                            datalabels.color = (context) => {
+                                return (context.datasetIndex === datasetIndex && context.dataIndex === index) ? 'white' : '#A0A0A0';
+                            };
+
+                            chart.update();
+                        } else {
+                            // If the user clicks outside a bar, reset all colors
+                            chart.data.datasets.forEach((dataset, i) => {
+                                dataset.backgroundColor = originalColors[i];
+                            });
+                            datalabels.color = 'white';
+                            chart.update();
+                        }
                     }
                 }
             });
@@ -252,10 +318,34 @@
         function updateCounter() {
             document.getElementById('page-counter').innerText = `${currentSlideIdx + 1} / ${presentationData.slides.length}`;
             const slides = document.querySelectorAll('.slide');
+
             slides.forEach((s, i) => {
-                if(i === currentSlideIdx) s.classList.add('active');
-                else s.classList.remove('active');
+                // Reset animations on all slides first to ensure they replay on revisit
+                const oldStaggerItems = s.querySelectorAll('.content-body li, .kpi-card, .grid-card, .workflow-step, .timeline-item, .comparison-item');
+                oldStaggerItems.forEach(item => {
+                    item.style.transitionDelay = '';
+                });
+
+                if(i === currentSlideIdx) {
+                    s.classList.add('active');
+                    
+                    // Apply new staggered animations to the active slide's elements
+                    const staggerItems = s.querySelectorAll('.content-body li, .kpi-card, .grid-card, .workflow-step, .timeline-item, .comparison-item');
+                    staggerItems.forEach((item, index) => {
+                        // Base delay for slide transition + stagger increment
+                        const delay = 300 + (index * 80); // in ms
+                        item.style.transitionDelay = `${delay}ms`;
+                    });
+                } else {
+                    s.classList.remove('active');
+                }
             });
+            
+            // Update sleek progress bar
+            const progressPercent = presentationData.slides.length > 1 
+                ? (currentSlideIdx / (presentationData.slides.length - 1)) * 100 
+                : 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
         }
 
         function nextSlide() {

@@ -147,7 +147,7 @@ If coming from browser console, image path should say:
 **Solution 3: Try Alternative Keys**
 
 | Key | Action |
-|-----|--------|
+| ----- | -------- |
 | `→` (right arrow) | Next |
 | `Space` | Next |
 | `←` (left arrow) | Previous |
@@ -337,7 +337,7 @@ datasets: [{ data: [100, 120, 130] }]  // 3 data points, 2 labels
 **Check Browser Compatibility:**
 
 | Browser | Support | Minimum Version |
-|---------|---------|-----------------|
+| --------- | --------- | ----------------- |
 | Chrome | ✅ Full | 90+ |
 | Firefox | ✅ Full | 88+ |
 | Safari | ✅ Full | 14+ |
@@ -492,7 +492,7 @@ videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ## 📋 **Quick Reference: Common Fixes**
 
 | Problem | Quick Fix |
-|---------|-----------|
+| --------- | ----------- |
 | Presentation won't load | Hard refresh: Ctrl+F5 |
 | Images not showing | Check path: `"images/filename.png"` |
 | Keyboard not working | Click on slide to focus it |
