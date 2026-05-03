@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presenter View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #132D46;
+            --white: #FFFFFF;
+            --green: #01C38E;
+            --blue: #0090D6;
+            --gray: #f4f4f4;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Lexend', sans-serif;
+            background: #111;
+            color: var(--white);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 20px;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .header {
+            grid-column: 1 / span 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .timer {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .preview-box {
+            background: #222;
+            border: 2px solid #444;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16 / 9;
+        }
+        .preview-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        .notes-container {
+            background: #222;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        .notes-label {
+            color: var(--green);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        .controls {
+            grid-column: 1 / span 2;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+        }
+        .btn {
+            background: var(--navy);
+            color: white;
+            border: 1px solid var(--blue);
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: var(--blue);
+        }
+        /* Mini-slide scaling */
+        .slide-preview {
+            transform: scale(0.25);
+            transform-origin: top left;
+            width: 400%; /* Reciprocal of scale */
+            height: 400%;
+            pointer-events: none;
+        }
+    </style>
+    <!-- We need the same styles to render previews correctly -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="iff_style.css">
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1 style="margin:0; font-size:1.2rem;">Presenter View</h1>
+            <div id="slide-info" style="opacity:0.6;">Slide 1 / 10</div>
+        </div>
+        <div class="timer" id="clock">00:00:00</div>
+    </div>
+
+    <div class="preview-container">
+        <div class="preview-box">
+            <span class="preview-label">CURRENT SLIDE</span>
+            <div id="current-preview" class="slide-preview"></div>
+        </div>
+        <div class="preview-box">
+            <span class="preview-label">NEXT SLIDE</span>
+            <div id="next-preview" class="slide-preview"></div>
+        </div>
+    </div>
+
+    <div class="notes-container">
+        <span class="notes-label">Speaker Notes</span>
+        <div id="speaker-notes">Welcome to the presentation.</div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="prev()">&#9664; Previous</button>
+        <button class="btn" onclick="next()">Next &#9654;</button>
+        <button class="btn" onclick="resetTimer()">Reset Timer</button>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="renderer.js"></script>
+    <script>
+        let currentIdx = 0;
+        const syncChannel = new BroadcastChannel('presentation_sync');
+        let startTime = Date.now();
+
+        syncChannel.onmessage = (event) => {
+            if (event.data.type === 'sync') {
+                currentIdx = event.data.index;
+                updateUI();
+            }
+        };
+
+        function updateUI() {
+            const total = presentationData.slides.length;
+            document.getElementById('slide-info').innerText = `Slide ${currentIdx + 1} / ${total}`;
+            
+            // Update Notes
+            const currentSlide = presentationData.slides[currentIdx];
+            document.getElementById('speaker-notes').innerHTML = currentSlide.notes || "No notes for this slide.";
+
+            // Render Previews
+            renderPreview('current-preview', currentIdx);
+            renderPreview('next-preview', (currentIdx + 1) % total);
+        }
+
+        function renderPreview(containerId, idx) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const slide = presentationData.slides[idx];
+            const globalTheme = presentationData.globalTheme || 'light';
+            const themeClass = slide.theme ? `theme-${slide.theme}` : `theme-${globalTheme}`;
+            
+            const slideDiv = document.createElement('div');
+            slideDiv.className = `slide active ${themeClass} layout-${slide.type}`;
+            slideDiv.style.width = '100%';
+            slideDiv.style.height = '100%';
+            slideDiv.style.position = 'relative';
+            slideDiv.style.visibility = 'visible';
+            slideDiv.style.opacity = '1';
+
+            const renderer = SlideRenderer[slide.type];
+            if (renderer) {
+                let html = SlideRenderer.renderHeader(slide);
+                html += renderer(slide, idx, slideDiv);
+                slideDiv.innerHTML = html;
+            }
+
+            container.appendChild(slideDiv);
+        }
+
+        function next() {
+            currentIdx = (currentIdx + 1) % presentationData.slides.length;
+            syncChannel.postMessage({ type: 'jump', index: currentIdx });
+            updateUI();
+        }
+
+        function prev() {
+            currentIdx = (currentIdx - 1 + presentationData.slides.length) % presentationData.slides.length;
+            syncChannel.postMessage({ type: 'jump', index: currentIdx });
+            updateUI();
+        }
+
+        // Timer logic
+        function updateClock() {
+            const diff = Date.now() - startTime;
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('clock').innerText = 
+                `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        setInterval(updateClock, 1000);
+
+        function resetTimer() {
+            startTime = Date.now();
+            updateClock();
+        }
+
+        window.onload = updateUI;
+    </script>
+</body>
+</html>

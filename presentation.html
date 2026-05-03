@@ -7,10 +7,15 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="iff_style.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 </head>
 <body>
 
@@ -20,22 +25,140 @@
     </div>
 
     <div id="presentation-container">
+    </div>
+    
+    <!-- Slide Sorter Overlay -->
+    <div id="slide-sorter" class="slide-sorter-overlay">
+        <div class="sorter-header">
+            <h2>Slide Sorter</h2>
+            <button class="btn" onclick="toggleSlideSorter()">Close (G)</button>
         </div>
+        <div id="sorter-grid" class="sorter-grid"></div>
+    </div>
+
+    <!-- Theme Settings Panel -->
+    <div id="theme-settings" class="theme-settings-panel">
+        <h3>Brand Colors</h3>
+        <div class="color-picker-group">
+            <label>Primary (Green): <input type="color" id="color-primary" value="#01C38E" onchange="updateBrandColor('--green', this.value)"></label>
+            <label>Secondary (Blue): <input type="color" id="color-secondary" value="#0090D6" onchange="updateBrandColor('--blue', this.value)"></label>
+            <label>Navy: <input type="color" id="color-navy" value="#132D46" onchange="updateBrandColor('--navy', this.value)"></label>
+        </div>
+        <button class="btn" style="margin-top: 20px;" onclick="toggleThemeSettings()">Close</button>
+    </div>
     
     <div class="page-indicator" id="page-counter"></div>
     
     <div class="controls">
+        <button class="btn" onclick="toggleThemeSettings()" title="Theme Settings">🎨</button>
+        <button class="btn" onclick="toggleSlideSorter()" title="Slide Sorter (G)">🔳</button>
+        <button class="btn" onclick="exportPDF()" title="Export to PDF">📄</button>
+        <button class="btn" onclick="downloadData()" title="Download Presentation Data">💾</button>
+        <button class="btn" onclick="openPresenterView()" title="Open Presenter View">📽️</button>
         <button class="btn" onclick="toggleFullscreen()" title="Fullscreen (F)">⛶</button>
         <button class="btn" onclick="prevSlide()">&#9664; Prev</button>
         <button class="btn" onclick="nextSlide()">Next &#9654;</button>
     </div>
 
-    <script src="data-template.js"></script>
+    <script src="data.js"></script>
+    <script src="renderer.js"></script>
 
     <script>
         const container = document.getElementById('presentation-container');
         let currentSlideIdx = 0;
         let chartInstances = [];
+        const syncChannel = new BroadcastChannel('presentation_sync');
+
+        syncChannel.onmessage = (event) => {
+            if (event.data.type === 'jump') {
+                currentSlideIdx = event.data.index;
+                updateCounter(false);
+            }
+        };
+
+        function openPresenterView() {
+            window.open('presenter.html', 'PresenterView', 'width=1000,height=700');
+        }
+
+        function downloadData() {
+            const dataStr = "const presentationData = " + JSON.stringify(presentationData, null, 4) + ";";
+            const dataUri = 'data:application/javascript;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'data.js';
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        function toggleSlideSorter() {
+            const sorter = document.getElementById('slide-sorter');
+            const grid = document.getElementById('sorter-grid');
+            
+            if (sorter.classList.contains('active')) {
+                sorter.classList.remove('active');
+            } else {
+                grid.innerHTML = '';
+                const slides = document.querySelectorAll('.slide');
+                slides.forEach((slide, index) => {
+                    const thumb = document.createElement('div');
+                    thumb.className = `sorter-thumb ${index === currentSlideIdx ? 'active' : ''}`;
+                    
+                    // Clone slide content for thumbnail
+                    const content = slide.cloneNode(true);
+                    content.classList.remove('active', 'prev');
+                    content.classList.add('thumb-content');
+                    
+                    thumb.appendChild(content);
+                    thumb.onclick = () => {
+                        currentSlideIdx = index;
+                        updateCounter();
+                        sorter.classList.remove('active');
+                    };
+                    
+                    grid.appendChild(thumb);
+                });
+                sorter.classList.add('active');
+            }
+        }
+
+        function exportPDF() {
+            const element = document.getElementById('presentation-container');
+            const opt = {
+                margin: 0,
+                filename: 'presentation.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+            };
+            
+            // Temporary show all slides for export
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(s => s.style.position = 'relative');
+            slides.forEach(s => s.style.visibility = 'visible');
+            slides.forEach(s => s.style.opacity = '1');
+            slides.forEach(s => s.style.transform = 'none');
+            slides.forEach(s => s.style.filter = 'none');
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore state
+                slides.forEach(s => s.style.position = '');
+                slides.forEach(s => s.style.visibility = '');
+                slides.forEach(s => s.style.opacity = '');
+                slides.forEach(s => s.style.transform = '');
+                slides.forEach(s => s.style.filter = '');
+                updateCounter();
+            });
+        }
+
+        function toggleThemeSettings() {
+            const panel = document.getElementById('theme-settings');
+            panel.classList.toggle('active');
+        }
+
+        function updateBrandColor(variable, value) {
+            document.documentElement.style.setProperty(variable, value);
+        }
 
         function buildPresentation() {
             const globalTheme = presentationData.globalTheme || 'light';
@@ -46,187 +169,16 @@
                 slideDiv.className = `slide ${themeClass} layout-${slide.type}`;
                 if(index === 0) slideDiv.classList.add('active');
 
-                let contentHtml = '';
-
-                // Default Header Generation (Logo on the far right)
-                // We exclude center-aligned or full-screen layouts from the standard header
-                if(slide.type !== 'cover' && slide.type !== 'image-background' && slide.type !== 'section-break' && slide.type !== 'contact') {
-                    contentHtml += `
-                        <div class="slide-header">
-                            <div class="slide-title">${slide.title}</div>
-                            <img src="images/Logo.svg" class="brand-logo" alt="Brand Logo" onerror="this.style.display='none'">
-                        </div>
-                    `;
+                const renderer = SlideRenderer[slide.type];
+                if (renderer) {
+                    let contentHtml = SlideRenderer.renderHeader(slide);
+                    contentHtml += renderer(slide, index, slideDiv);
+                    slideDiv.innerHTML = contentHtml;
+                } else {
+                    console.error(`Unknown slide type: ${slide.type}`);
+                    slideDiv.innerHTML = `<div class="content-body"><h1>Unknown Slide Type: ${slide.type}</h1></div>`;
                 }
 
-                // Content Generation
-                switch(slide.type) {
-                    case 'cover':
-                        contentHtml += `
-                            <img src="images/Logo.png" class="brand-logo" alt="Brand Logo" onerror="this.style.display='none'" style="margin-bottom: 30px; height: 80px;">
-                            <h1 class="gradient-text">${slide.title}</h1>
-                            <h2>${slide.subtitle}</h2>
-                            <p style="margin-top:40px; font-size:1.2rem; opacity:0.8;">${slide.date || ''}</p>
-                        `;
-                        break;
-                    case 'agenda':
-                    case 'text':
-                        let listHtml = slide.items ? `<ul>${slide.items.map(i => `<li>${i}</li>`).join('')}</ul>` : slide.content;
-                        contentHtml += `<div class="content-body">${listHtml}</div>`;
-                        break;
-                    case 'kpi':
-                        contentHtml += `<div class="kpi-grid">`;
-                        slide.metrics.forEach(m => {
-                            let color = m.status === 'up' ? 'var(--green)' : 'var(--blue)';
-                            let arrow = m.status === 'up' ? '▲' : '▼';
-                            contentHtml += `
-                                <div class="kpi-card">
-                                    <div class="kpi-label">${m.label}</div>
-                                    <div class="kpi-value">${m.value}</div>
-                                    <div class="kpi-detail"><span style="color:${color}">${arrow}</span> ${m.detail}</div>
-                                </div>
-                            `;
-                        });
-                        contentHtml += `</div>`;
-                        break;
-                    case 'workflow':
-                        contentHtml += `<p class="content-body">${slide.description}</p><div class="workflow-container">`;
-                        slide.steps.forEach(s => {
-                            contentHtml += `<div class="workflow-step"><h4>${s.name}</h4><p>${s.detail}</p></div>`;
-                        });
-                        contentHtml += `</div>`;
-                        break;
-                    case 'timeline':
-                        contentHtml += `<div class="timeline">`;
-                        slide.events.forEach(e => {
-                            contentHtml += `<div class="timeline-item"><div class="timeline-date">${e.date}</div><p>${e.text}</p></div>`;
-                        });
-                        contentHtml += `</div>`;
-                        break;
-                    case 'image-split':
-                        contentHtml += `
-                            <div class="split-layout">
-                                <div class="split-text content-body">${slide.content}</div>
-                                <div class="split-image" style="background-image: url('${slide.image}')"></div>
-                            </div>
-                        `;
-                        break;
-                    case 'image-full':
-                        contentHtml += `
-                            <div class="full-image-container">
-                                <img src="${slide.image}" class="full-image" alt="Slide Image">
-                                ${slide.caption ? `<div class="image-caption">${slide.caption}</div>` : ''}
-                            </div>
-                        `;
-                        break;
-                    case 'image-background':
-                        slideDiv.style.backgroundImage = `url('${slide.image}')`;
-                        slideDiv.style.backgroundSize = 'cover';
-                        slideDiv.style.backgroundPosition = 'center';
-                        slideDiv.style.animation = 'none'; 
-                        contentHtml = `
-                            <img src="images/Logo.png" class="brand-logo" alt="Brand Logo" style="position: absolute; top: 60px; right: 80px; z-index: 10;" onerror="this.style.display='none'">
-                            <h2>${slide.title}</h2>
-                            <p>${slide.content}</p>
-                        `;
-                        break;
-                    case 'number-highlight':
-                        contentHtml += `
-                            <div class="big-number">${slide.number}</div>
-                            <div class="big-number-text">${slide.text}</div>
-                        `;
-                        break;
-                    case 'quote':
-                        contentHtml += `
-                            <div class="quote-text">${slide.quote}</div>
-                            <div class="quote-author">— ${slide.author}</div>
-                        `;
-                        break;
-                    case 'chart-bar':
-                        contentHtml += `
-                            <p class="content-body">${slide.description}</p>
-                            <div class="chart-container"><canvas id="chart-${index}"></canvas></div>
-                        `;
-                        break;
-                    case 'contact':
-                        contentHtml += `
-                            <div class="contact-box">
-                                <img src="images/Logo.png" class="brand-logo" style="margin-bottom: 30px; height: 70px;" alt="Brand Logo" onerror="this.style.display='none'">
-                                <h2>${slide.title}</h2>
-                                <p>📧 ${slide.email}</p>
-                                <p>📞 ${slide.phone}</p>
-                                <p>📍 ${slide.location}</p>
-                            </div>
-                        `;
-                        break;
-                    case 'section-break':
-                        contentHtml += `
-                            <div class="section-break-content">
-                                <img src="images/Logo.png" class="brand-logo" style="margin-bottom: 40px; height: 65px;" alt="Brand Logo" onerror="this.style.display='none'">
-                                <h1 class="section-title">${slide.title}</h1>
-                                ${slide.subtitle ? `<h2 class="section-subtitle">${slide.subtitle}</h2>` : ''}
-                            </div>
-                        `;
-                        break;
-                    case 'two-column':
-                        contentHtml += `
-                            <div class="two-column-layout">
-                                <div class="column">
-                                    ${slide.leftLabel ? `<h3 class="column-label">${slide.leftLabel}</h3>` : ''}
-                                    <div class="column-content">${slide.leftContent}</div>
-                                </div>
-                                <div class="column">
-                                    ${slide.rightLabel ? `<h3 class="column-label">${slide.rightLabel}</h3>` : ''}
-                                    <div class="column-content">${slide.rightContent}</div>
-                                </div>
-                            </div>
-                        `;
-                        break;
-                    case 'comparison':
-                        contentHtml += `<div class="comparison-grid">`;
-                        contentHtml += `<div class="comparison-column"><h3>${slide.leftLabel}</h3>`;
-                        slide.leftItems.forEach(item => {
-                            contentHtml += `<div class="comparison-item"><span class="item-icon">✗</span><p>${item}</p></div>`;
-                        });
-                        contentHtml += `</div>`;
-                        contentHtml += `<div class="comparison-column"><h3>${slide.rightLabel}</h3>`;
-                        slide.rightItems.forEach(item => {
-                            contentHtml += `<div class="comparison-item"><span class="item-icon">✓</span><p>${item}</p></div>`;
-                        });
-                        contentHtml += `</div></div>`;
-                        break;
-                    case 'grid':
-                        contentHtml += `
-                            <div class="grid-container" style="--grid-columns: ${slide.columns || 3}">
-                                ${slide.items.map(item => `
-                                    <div class="grid-card">
-                                        ${item.icon ? `<div class="grid-icon">${item.icon}</div>` : ''}
-                                        ${item.image ? `<div class="grid-image" style="background-image: url('${item.image}')"></div>` : ''}
-                                        <h4>${item.title}</h4>
-                                        <p>${item.description}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        `;
-                        break;
-                    case 'video':
-                        contentHtml += `
-                            <div class="video-container">
-                                <div class="video-wrapper">
-                                    ${slide.videoUrl.includes('youtube.com') || slide.videoUrl.includes('youtu.be') ?
-                                        `<iframe src="${slide.videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` :
-                                        slide.videoUrl.includes('vimeo.com') ?
-                                        `<iframe src="${slide.videoUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>` :
-                                        `<video controls style="width: 100%; height: 100%;"><source src="${slide.videoUrl}" type="video/mp4">Your browser does not support the video tag.</video>`
-                                    }
-                                </div>
-                                ${slide.caption ? `<div class="video-caption">${slide.caption}</div>` : ''}
-                            </div>
-                        `;
-                        break;
-                }
-
-                slideDiv.innerHTML = contentHtml;
                 container.appendChild(slideDiv);
 
                 if(slide.type.startsWith('chart')) {
@@ -315,12 +267,14 @@
             chartInstances.push(chart);
         }
 
-        function updateCounter() {
+        function updateCounter(broadcast = true) {
             document.getElementById('page-counter').innerText = `${currentSlideIdx + 1} / ${presentationData.slides.length}`;
             const slides = document.querySelectorAll('.slide');
 
             slides.forEach((s, i) => {
-                // Reset animations on all slides first to ensure they replay on revisit
+                s.classList.remove('prev'); // Reset prev class
+
+                // Reset animations
                 const oldStaggerItems = s.querySelectorAll('.content-body li, .kpi-card, .grid-card, .workflow-step, .timeline-item, .comparison-item');
                 oldStaggerItems.forEach(item => {
                     item.style.transitionDelay = '';
@@ -329,23 +283,27 @@
                 if(i === currentSlideIdx) {
                     s.classList.add('active');
                     
-                    // Apply new staggered animations to the active slide's elements
                     const staggerItems = s.querySelectorAll('.content-body li, .kpi-card, .grid-card, .workflow-step, .timeline-item, .comparison-item');
                     staggerItems.forEach((item, index) => {
-                        // Base delay for slide transition + stagger increment
-                        const delay = 300 + (index * 80); // in ms
+                        const delay = 300 + (index * 80); 
                         item.style.transitionDelay = `${delay}ms`;
                     });
+
+                    // Mark previous slide for transition effect
+                    if (i > 0) slides[i-1].classList.add('prev');
                 } else {
                     s.classList.remove('active');
                 }
             });
             
-            // Update sleek progress bar
             const progressPercent = presentationData.slides.length > 1 
                 ? (currentSlideIdx / (presentationData.slides.length - 1)) * 100 
                 : 100;
             document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            if (broadcast) {
+                syncChannel.postMessage({ type: 'sync', index: currentSlideIdx });
+            }
         }
 
         function nextSlide() {
@@ -396,6 +354,12 @@
             if (e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
                 toggleFullscreen();
+            }
+
+            // Slide Sorter toggle
+            if (e.key === 'g' || e.key === 'G') {
+                e.preventDefault();
+                toggleSlideSorter();
             }
             
             // Jump to specific slide (1-9 keys)

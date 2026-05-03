@@ -1,7 +1,7 @@
 /**
  * DATA-TEMPLATE.JS
  * 
- * Comprehensive examples of all 17 slide types available in the HTML Presentation Framework.
+ * Comprehensive examples of 25+ slide variations available in the HTML Presentation Framework.
  * 
  * This file demonstrates each slide type with realistic content examples.
  * Use this as a reference when creating your own presentations.
@@ -14,15 +14,16 @@ const presentationData = {
     slides: [
 
         // ============================================================
-        // SECTION 1: TITLE SLIDES (3 types)
+        // SECTION 1: TITLE SLIDES
         // ============================================================
 
         {
             type: "cover",
             theme: "dark",
-            title: "All 17 Slide Types",
-            subtitle: "A Comprehensive Overview with Examples",
-            date: "March 31, 2026"
+            title: "Cinematic Presentations",
+            subtitle: "A Comprehensive Guide to the 25+ Slide Library",
+            date: "May 2026",
+            notes: "Opening slide with cinematic entry animations."
         },
 
         // --- EXAMPLE: Cover Slide (Alternative) ---
@@ -423,3 +424,58 @@ const productLaunchPresentation = {
         { type: "contact", theme: "dark", title: "Available Now", email: "sales@company.com", phone: "+1 (555) 123-4567", location: "Available Worldwide" }
     ]
 };
+
+// ============================================================
+// NEW PROFESSIONAL SLIDE TYPES (registry reference)
+// ============================================================
+
+/*
+    TEAM:
+    {
+        type: "team",
+        title: "Our Leadership",
+        members: [
+            { name: "John Doe", role: "CEO", image: "images/team.png", social: ["𝕏", "💼"] }
+        ]
+    }
+
+    CODE:
+    {
+        type: "code",
+        title: "API Implementation",
+        filename: "client.js",
+        language: "javascript",
+        code: "const api = new Client();"
+    }
+
+    TABLE:
+    {
+        type: "table",
+        title: "Pricing Plans",
+        headers: ["Feature", "Free", "Pro"],
+        rows: [
+            ["Support", false, true],
+            ["Storage", "1GB", "100GB"]
+        ]
+    }
+
+    TESTIMONIAL:
+    {
+        type: "testimonial",
+        title: "Client Feedback",
+        quote: "This is a game changer!",
+        name: "Jane Doe",
+        title: "CTO at StartupX",
+        image: "images/team.png",
+        companyLogo: "images/Logo.png"
+    }
+
+    MAP:
+    {
+        type: "map",
+        title: "Global Reach",
+        locations: [
+            { x: 200, y: 150, label: "New York" }
+        ]
+    }
+*/

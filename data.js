@@ -6,13 +6,15 @@ const presentationData = {
             theme: "dark",
             title: "Data&Analytics",
             subtitle: "Q1 Architecture & Performance Review",
-            date: "March 2026"
+            date: "March 2026",
+            notes: "Welcome everyone to the Q1 Architecture & Performance Review. Today we'll look at our progress in Data & Analytics."
         },
         {
             type: "quote",
             title: "Core Philosophy",
             quote: "Agility in analytics is not just about speed; it is about the fluidity of thought translating into actionable data.",
-            author: "Data Factory Leadership"
+            author: "Data Factory Leadership",
+            notes: "This quote defines our vision for the Data Factory. It's about how quickly we can turn raw data into insights."
         },
         {
             type: "agenda",
@@ -91,6 +93,52 @@ const presentationData = {
             email: "example@gmail.com",
             location: "Mexico City, CDMX",
             phone: "55 5555 5555"
+        },
+        {
+            type: "team",
+            title: "Our Experts",
+            members: [
+                { name: "Jane Doe", role: "Chief Data Architect", image: "images/team.png", social: ["𝕏", "💼"] },
+                { name: "John Smith", role: "AI Research Lead", image: "images/team.png", social: ["💼"] },
+                { name: "Alice Wong", role: "UX Analytics", image: "images/team.png", social: ["🌐"] }
+            ]
+        },
+        {
+            type: "code",
+            title: "Custom Data Pipeline",
+            filename: "pipeline.js",
+            language: "javascript",
+            code: "const processData = (raw) => {\n  return raw\n    .filter(d => d.active)\n    .map(d => ({ ...d, timestamp: Date.now() }));\n};\n\nconsole.log('Pipeline Active 🚀');"
+        },
+        {
+            type: "table",
+            title: "Competitive Analysis",
+            headers: ["Feature", "Our Tool", "Competitor A", "Competitor B"],
+            rows: [
+                ["Real-time Sync", true, true, false],
+                ["Custom Branding", true, false, false],
+                ["Offline Mode", true, false, true],
+                ["AI Insights", "Advanced", "Basic", "None"]
+            ]
+        },
+        {
+            type: "testimonial",
+            title: "Client Success",
+            quote: "This framework revolutionized how we present data to our stakeholders. The speed and beauty are unmatched.",
+            name: "Michael Chen",
+            title: "CEO at TechFlow",
+            image: "images/team.png",
+            companyLogo: "images/Logo.png"
+        },
+        {
+            type: "map",
+            title: "Global Operations",
+            locations: [
+                { x: 200, y: 150, label: "New York" },
+                { x: 450, y: 150, label: "London" },
+                { x: 750, y: 250, label: "Tokyo" },
+                { x: 300, y: 400, label: "Sao Paulo" }
+            ]
         }
     ]
 };

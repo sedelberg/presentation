@@ -137,12 +137,12 @@ Find `.slide-header` in `style.css`:
 
 ```text
 presentation/
-└── images/
-    ├── logo.png       (Brand logo)
-    ├── office.png     (Office/team photo)
-    ├── product.png    (Product screenshot)
-    ├── team.png       (Team photo)
-    └── ...
+├── presentation.html  (Main Engine)
+├── presenter.html     (Presenter View)
+├── renderer.js        (Slide Logic)
+├── data.js            (Active Slides)
+├── style.css          (Design System)
+└── images/            (Assets)
 ```
 
 ### Best Practices
@@ -332,17 +332,16 @@ No security concerns when running locally.
 
 | Browser | Support | Notes |
 | --------- | --------- | ------- |
-| Chrome/Chromium | ✅ Full | Latest versions (90+) |
-| Firefox | ✅ Full | Latest versions (88+) |
-| Safari | ✅ Full | Latest versions (14+) |
-| Edge | ✅ Full | Latest versions (90+) |
-| IE 11 | ⚠️ Partial | Basic support, some features missing |
-| Mobile browsers | ✅ Full | Works on iPad, tablets, phones |
+| Chrome/Chromium | ✅ Full | Support for BroadcastChannel & Local FS |
+| Firefox | ✅ Full | Support for BroadcastChannel |
+| Safari | ✅ Full | Support for BroadcastChannel |
+| Edge | ✅ Full | Support for BroadcastChannel |
 
 ### Required Browser Features
 
 - ES6+ JavaScript support
 - CSS Flexbox and Grid
+- **BroadcastChannel API** (For synchronized Presenter View)
 - `sessionStorage` or `localStorage` (for state management)
 
 ---
